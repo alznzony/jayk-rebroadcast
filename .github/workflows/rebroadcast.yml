@@ -1,18 +1,25 @@
-name: Rebroadcast Pending Orders
+name: Re-Broadcast Orders
 
 on:
   schedule:
-    - cron: "*/1 * * * *"   # كل دقيقة
-  workflow_dispatch:
+    - cron: "* * * * *"   # كل دقيقة
+  workflow_dispatch:      # تشغيل يدوي
 
 jobs:
-  rebroadcast:
+  run-rebroadcast:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Call Supabase Re-Broadcast Function
+      - name: Call Re-Broadcast Function
         run: |
-          echo "Calling Re-broadcast Function..."
-          RESPONSE=$(curl -s -X POST "${{ secrets.SUPABASE_URL }}/functions/v1/rebroadcast_pending_orders")
-          echo "Response:"
-          echo "$RESPONSE"
+          echo "Calling Re-Broadcast Function..."
+
+          RESPONSE=$(curl -s -o response.txt -w "%{http_code}" \
+            -X POST \
+            -H "x-function-key: ${{ secrets.FUNCTIONS_PASS_KEY }}" \
+            https://gxnokzufjkioldjfgowk.supabase.co/functions/v1/rebroadcast_pending_orders
+          )
+
+          echo "HTTP Status = $RESPONSE"
+          echo "--- Response ---"
+          cat response.txt
