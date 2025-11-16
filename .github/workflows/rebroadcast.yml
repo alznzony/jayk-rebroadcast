@@ -1,3 +1,6 @@
+headers:
+  Authorization: Bearer ${{ secrets.FUNCTIONS_PASS_KEY }}
+  
 name: Rebroadcast Pending Orders
 
 on:
