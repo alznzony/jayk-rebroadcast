@@ -1,0 +1,21 @@
+name: Rebroadcast Pending Orders
+
+on:
+  schedule:
+    - cron: "*/3 * * * *"   # كل 3 دقائق
+  workflow_dispatch:        # يسمح لك تشغيله يدويًا
+
+jobs:
+  rebroadcast:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Call Supabase Re-Broadcast Function
+        run: |
+          echo "Calling Re-Broadcast Function..."
+          STATUS=$(curl -s -o response.txt -w "%{http_code}" \
+            "https://gxnokzufjkioldjfgowk.supabase.co/functions/v1/rebroadcast_pending_orders")
+
+          echo "HTTP Status = $STATUS"
+          echo "--- Response ---"
+          cat response.txt
