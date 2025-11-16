@@ -2,8 +2,8 @@ name: Re-Broadcast Orders
 
 on:
   schedule:
-    - cron: "* * * * *"   # تشغيل كل دقيقة
-  workflow_dispatch:
+    - cron: "* * * * *"     # تشغيل كل دقيقة
+  workflow_dispatch:         # تشغيل يدوي
 
 jobs:
   run-rebroadcast:
@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Call Re-Broadcast Function
         run: |
-          echo "Calling Re-Broadcast Function..."
+          echo "🚀 Calling Re-Broadcast Function..."
 
           RESPONSE=$(curl -s -o response.txt -w "%{http_code}" \
             -X POST \
@@ -20,6 +20,6 @@ jobs:
             https://gxnokzufjkioldjfgowk.supabase.co/functions/v1/rebroadcast_pending_orders
           )
 
-          echo "HTTP Status = $RESPONSE"
-          echo "--- Response ---"
+          echo "📡 HTTP Status = $RESPONSE"
+          echo "----- Response Body -----"
           cat response.txt
