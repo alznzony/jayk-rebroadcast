@@ -16,7 +16,8 @@ jobs:
 
           RESPONSE=$(curl -s -w "\n%{http_code}" \
             -X POST \
-            -H "Authorization: Bearer ${{ secrets.FUNCTIONS_PASS_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{}' \
             https://gxnokzufjkioldjfgowk.supabase.co/functions/v1/rebroadcast_pending_orders)
 
           BODY=$(echo "$RESPONSE" | sed '$d')
@@ -26,5 +27,6 @@ jobs:
           echo "Response = $BODY"
 
           if [ "$STATUS" -ne 200 ]; then
+            echo "ERROR: Failed"
             exit 1
           fi
