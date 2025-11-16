@@ -1,12 +1,9 @@
-headers:
-  Authorization: Bearer ${{ secrets.FUNCTIONS_PASS_KEY }}
-  
 name: Rebroadcast Pending Orders
 
 on:
   schedule:
-    - cron: "*/1 * * * *"   # تشغيل كل دقيقة
-  workflow_dispatch:        # تشغيل يدوي عند الحاجة
+    - cron: "*/1 * * * *"
+  workflow_dispatch:
 
 jobs:
   rebroadcast:
@@ -23,8 +20,7 @@ jobs:
           RESPONSE=$(curl -s -X POST \
             "${{ secrets.SUPABASE_URL }}/functions/v1/rebroadcast_pending_orders" \
             -H "Content-Type: application/json" \
-            -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
-            -H "x-functions-key: ${{ secrets.FUNCTIONS_PASS_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.FUNCTIONS_PASS_KEY }}" \
           )
 
           echo "----- Function Response -----"
