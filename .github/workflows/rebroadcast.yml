@@ -2,20 +2,34 @@ name: Rebroadcast Pending Orders
 
 on:
   schedule:
-    - cron: "*/3 * * * *"   # كل 3 دقائق
-  workflow_dispatch:        # يسمح لك تشغيله يدويًا
+    - cron: "*/1 * * * *"   # تشغيل كل دقيقة
+  workflow_dispatch:        # تشغيل يدوي عند الحاجة
 
 jobs:
   rebroadcast:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Call Supabase Re-Broadcast Function
-        run: |
-          echo "Calling Re-Broadcast Function..."
-          STATUS=$(curl -s -o response.txt -w "%{http_code}" \
-            "https://gxnokzufjkioldjfgowk.supabase.co/functions/v1/rebroadcast_pending_orders")
+      # ------------------------------
+      # 1. Checkout Repository
+      # ------------------------------
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
-          echo "HTTP Status = $STATUS"
-          echo "--- Response ---"
-          cat response.txt
+      # ------------------------------
+      # 2. Call Supabase ReBroadcast Function
+      # ------------------------------
+      - name: Call Supabase ReBroadcast Function
+        run: |
+          echo "Calling ReBroadcast Function..."
+
+          RESPONSE=$(curl -s -X POST \
+            "${{ secrets.SUPABASE_URL }}/functions/v1/rebroadcast_pending_orders" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+            -H "x-functions-key: ${{ secrets.FUNCTIONS_PASS_KEY }}" \
+          )
+
+          echo "----- Function Response -----"
+          echo "$RESPONSE"
+          echo "-----------------------------"
