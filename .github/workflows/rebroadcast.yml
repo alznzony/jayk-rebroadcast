@@ -17,6 +17,7 @@ jobs:
           RESPONSE=$(curl -s -w "\n%{http_code}" \
             -X POST \
             -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${{ secrets.SERVICE_ROLE }}" \
             -d '{}' \
             https://gxnokzufjkioldjfgowk.supabase.co/functions/v1/rebroadcast_pending_orders)
 
@@ -24,9 +25,10 @@ jobs:
           STATUS=$(echo "$RESPONSE" | tail -n1)
 
           echo "HTTP Status = $STATUS"
-          echo "Response = $BODY"
+          echo "--- Response ---"
+          echo "$BODY"
 
           if [ "$STATUS" -ne 200 ]; then
-            echo "ERROR: Failed"
+            echo "ERROR: Function failed"
             exit 1
           fi
