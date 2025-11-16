@@ -1,9 +1,9 @@
 name: Rebroadcast Pending Orders
 
 on:
-  workflow_dispatch:
   schedule:
-    - cron: "*/1 * * * *"
+    - cron: "*/1 * * * *"   # كل دقيقة
+  workflow_dispatch:
 
 jobs:
   rebroadcast:
@@ -12,23 +12,7 @@ jobs:
     steps:
       - name: Call Supabase Re-Broadcast Function
         run: |
-          echo "Calling Re-Broadcast Function..."
-
-          RESPONSE=$(curl -s -w "\n%{http_code}" \
-            -X POST \
-            -H "Content-Type: application/json" \
-            -H "Authorization: Bearer ${{ secrets.SERVICE_ROLE }}" \
-            -d '{}' \
-            https://gxnokzufjkioldjfgowk.supabase.co/functions/v1/rebroadcast_pending_orders)
-
-          BODY=$(echo "$RESPONSE" | sed '$d')
-          STATUS=$(echo "$RESPONSE" | tail -n1)
-
-          echo "HTTP Status = $STATUS"
-          echo "--- Response ---"
-          echo "$BODY"
-
-          if [ "$STATUS" -ne 200 ]; then
-            echo "ERROR: Function failed"
-            exit 1
-          fi
+          echo "Calling Re-broadcast Function..."
+          RESPONSE=$(curl -s -X POST "${{ secrets.SUPABASE_URL }}/functions/v1/rebroadcast_pending_orders")
+          echo "Response:"
+          echo "$RESPONSE"
