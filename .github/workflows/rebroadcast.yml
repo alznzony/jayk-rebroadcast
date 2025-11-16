@@ -2,8 +2,8 @@ name: Re-Broadcast Orders
 
 on:
   schedule:
-    - cron: "* * * * *"   # كل دقيقة
-  workflow_dispatch:      # تشغيل يدوي
+    - cron: "* * * * *"   # تشغيل كل دقيقة
+  workflow_dispatch:
 
 jobs:
   run-rebroadcast:
